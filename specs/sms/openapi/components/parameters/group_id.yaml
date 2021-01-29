@@ -1,0 +1,6 @@
+name: group_id
+in: path
+required: true
+schema:
+  type: string
+description: ID of a group that you are interested in

@@ -1,0 +1,44 @@
+type: object
+description: ''
+properties:
+  type:
+    type: string
+    description: The object type. Either mo_text or mo_binary.
+    example: mo_text
+  id:
+    type: string
+    description: The ID of this inbound message.
+    example: HYtJKLlsI32IK
+  from:
+    type: string
+    description: The originator phone number
+    example: 11203494390
+  to:
+    type: string
+    description: >-
+      The destination phone number or short code. [More
+      info](https://developers.sinch.com/docs/sms-rest#msisdn)
+    example: 11203453453
+  body:
+    type: string
+    description: 'Message body, Base64 encoded if type is mo_binary.'
+    example: This is a test message
+  operator_id:
+    type: string
+    description: The MCCMNC of the sender's operator if known.
+  sent_at:
+    type: string
+    format: date-time
+    description: >-
+      When the message left the originating device. Only available if provided
+      by operator.
+
+
+      Formatted as ISO-8601.
+  received_at:
+    type: string
+    format: date-time
+    description: |-
+      When the system received the message.
+
+      Formatted as ISO-8601.

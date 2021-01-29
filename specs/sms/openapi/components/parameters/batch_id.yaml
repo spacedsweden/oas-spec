@@ -1,0 +1,7 @@
+in: path
+required: true
+name: batch_id
+schema:
+  type: string
+description: The batch ID you got from sending a message.
+example: 4HJY56S2r4t6c

@@ -1,0 +1,7 @@
+in: path
+required: true
+name: service_plan_id
+schema:
+  type: string
+description: The service ID you want to use
+example: jd63jf88477ll

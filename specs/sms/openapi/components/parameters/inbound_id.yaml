@@ -1,0 +1,7 @@
+in: path
+required: true
+name: inbound_id
+schema:
+  type: string
+description: The inbound ID found when listing inbound messages.
+example: 4HJ5KI4KI6SJL3sk

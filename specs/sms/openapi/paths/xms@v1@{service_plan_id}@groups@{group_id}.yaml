@@ -1,0 +1,173 @@
+parameters:
+  - $ref: ..\components\parameters\service_plan_id.yaml
+  - $ref: ..\components\parameters\group_id.yaml
+get:
+  summary: Retrieve a group
+  description: This operation retrieves a specific group with the provided group ID.
+  operationId: RetrieveGroup
+  tags:
+    - Groups
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: ..\components\schemas\createGroupResponse.yaml
+    '404':
+      description: Not Found. The group ID is unknown to the system.
+post:
+  summary: Update a group
+  description: >-
+    With the update group operation you can add and remove members to an
+    existing group as well as rename the group.
+
+
+    The request will not be rejected for duplicate adds or unknown removes.
+
+
+    The adds will be done before the deletes so if an MSISDN is in both lists
+    then it will not be part of the resulting group.
+
+
+    To remove an existing name set name explicitly to the JSON value null.
+    Omitting name from the JSON body will leave the name unchanged.
+
+
+    Updating a group targeted by a batch message scheduled in the future is
+    allowed and changes will be reflected until the batch is sent.
+  operationId: UpdateGroup
+  security:
+    - BearerAuth: []
+  tags:
+    - Groups
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            add:
+              type: array
+              maxItems: 10000
+              description: |-
+                phone numbers to add as members.
+
+                Constraints:
+                Elements must be phone numbers.
+                 Max 10 000 elements.
+              items:
+                $ref: ..\components\schemas\msisdn.yaml
+            remove:
+              type: array
+              maxItems: 10000
+              description: |-
+                phone numbers to remove from group.
+
+                Constraints:
+                Elements must be phone numbers.
+                Max 10 000 elements.
+              items:
+                $ref: ..\components\schemas\msisdn.yaml
+            name:
+              type: string
+              maxLength: 20
+              description: "Name of group.\n\t\nConstraints:\nMax 20 characters"
+            add_from_group:
+              type: string
+              description: |-
+                Copy the members from the given group into this group.
+
+                Constraints:
+                Must be valid group ID
+            remove_from_group:
+              type: string
+              description: |-
+                Remove members in the given group from group.
+
+                Constraints:
+                Must be valid group ID
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: ..\components\schemas\createGroupResponse.yaml
+    '400':
+      description: >-
+        Bad request. There was an error with your request. The body is a JSON
+        object described in rest_http_errors. Possible error codes include
+        syntax_invalid_json, syntax_invalid_parameter_format and
+        syntax_constraint_violation.
+    '403':
+      description: >-
+        Forbidden. One or more groups referenced in your request could not be
+        found.
+    '404':
+      description: Not found. If the group ID is unknown to the system.
+put:
+  security:
+    - BearerAuth: []
+  summary: Replace a group
+  operationId: ReplaceGroup
+  description: >-
+    The replace operation will replace all parameters, including members, of an
+    existing group with new values.
+
+
+    Replacing a group targeted by a batch message scheduled in the future is
+    allowed and changes will be reflected when the batch is sent.
+  tags:
+    - Groups
+    - Multiple recipients
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - members
+          properties:
+            name:
+              type: string
+              description: |-
+                Name of group.
+
+                Constraints:
+                Max 20 characters
+            members:
+              type: array
+              maxItems: 10000
+              description: >-
+                The initial members of the group.
+
+
+                Constraints:
+
+                Elements must be phone numbers in
+                [e164](https://en.wikipedia.org/wiki/E.164) format MSISDNs.
+
+                Max 10 000 elements.
+              items:
+                $ref: ..\components\schemas\msisdn.yaml
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: ..\components\schemas\createGroupResponse.yaml
+    '400':
+      description: >-
+        Bad request. There was an error with your request. The body is a JSON
+        object described in rest_http_errors. Possible error codes include
+        syntax_invalid_json, syntax_invalid_parameter_format and
+        syntax_constraint_violation.
+    '403':
+      description: >-
+        Forbidden. The system was not able to fulfill your request. The body is
+        a JSON object described in rest_http_errors. Possible error codes
+        include conflict_group_name.
+    '404':
+      description: Not found. If the group ID is unknown to the system.

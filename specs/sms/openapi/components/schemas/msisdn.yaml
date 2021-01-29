@@ -1,0 +1,4 @@
+type: string
+format: e164
+description: A phonenumber
+example: '+453234457784'

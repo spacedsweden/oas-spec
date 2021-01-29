@@ -1,0 +1,22 @@
+parameters:
+  - $ref: ..\components\parameters\service_plan_id.yaml
+  - $ref: ..\components\parameters\inbound_id.yaml
+get:
+  summary: Retrieve inbound message
+  description: >-
+    This operation retrieves a specific inbound message with the provided
+    inbound ID.
+  operationId: RetrieveInboundMessage
+  tags:
+    - Receive SMS
+  security:
+    - BearerAuth: []
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: ..\components\schemas\inboundResponseObject.yaml
+    '404':
+      description: Not found. The inbound ID is unknown to the system.

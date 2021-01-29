@@ -1,0 +1,71 @@
+parameters:
+  - $ref: ..\components\parameters\service_plan_id.yaml
+post:
+  security:
+    - BearerAuth: []
+  summary: Dry run
+  description: >-
+    This operation will perform a dry run of a batch which calculates the bodies
+    and number of parts for all messages in the batch without actually sending
+    any messages.
+  operationId: Dry_Run
+  tags:
+    - Batches
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ..\components\schemas\sendBatchObject.yaml
+  parameters:
+    - schema:
+        type: boolean
+        example: true
+      in: query
+      name: per_recipient
+      description: Whether to include per recipient details in the response
+    - schema:
+        type: integer
+        maximum: 1000
+        default: 100
+        example: 500
+      in: query
+      name: number_of_recipients
+      description: >-
+        Max number of recipients to include per recipient details for in the
+        response
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              number_of_recipients:
+                type: integer
+                description: The number of recipients in the batch
+              number_of_messages:
+                type: integer
+                description: The total number of SMS message parts to be sent in the batch
+              per_recipient:
+                type: array
+                description: >-
+                  The recipient, the number of message parts to this recipient,
+                  the body of the message, and the encoding type of each message
+                items:
+                  type: object
+                  properties:
+                    recipient:
+                      type: string
+                    message_part:
+                      type: string
+                    body:
+                      type: string
+                    encoding:
+                      type: string
+    '400':
+      description: >-
+        Bad request. There was an error with your request. The body is a JSON
+        object described in rest_http_errors. Possible error codes include
+        `syntax_invalid_json`, `syntax_invalid_parameter_format` and
+        `syntax_constraint_violation`.

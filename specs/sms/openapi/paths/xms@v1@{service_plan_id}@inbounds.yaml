@@ -1,0 +1,85 @@
+parameters:
+  - $ref: ..\components\parameters\service_plan_id.yaml
+get:
+  summary: Incoming Messages
+  tags:
+    - Receive SMS
+  security:
+    - BearerAuth: []
+  operationId: Inbounds
+  description: >-
+    Inbounds, or Mobile Originated messages, are incoming messages. Inbound
+    messages can be listed and retrieved like batch messages and they can also
+    be delivered by [callback
+    requests](https://developers.sinch.com/docs/sms-rest#callback) like delivery
+    reports. More callback information:
+    https://developers.sinch.com/docs/sms-rest#callback 
+  parameters:
+    - schema:
+        type: integer
+        minimum: 0
+        default: 0
+      in: query
+      name: page
+      description: |-
+        The page number starting from 0
+
+        constraints:
+        0 or larger
+
+        Default:
+        0
+    - schema:
+        type: integer
+        maximum: 100
+        default: 30
+      in: query
+      name: page_size
+      description: |-
+        Determines the size of a page
+
+        Constraints:
+        Max 100
+
+        Default:
+        30
+    - schema:
+        type: string
+        example: '+14155553421, +13435552671, +14325552677'
+      in: query
+      name: to
+      description: >-
+        Only list messages set to this destination. Multiple phone numbers
+        formatted as [e164](https://en.wikipedia.org/wiki/E.164) can be comma
+        separated. 
+    - schema:
+        type: string
+        default: Now-24
+        format: ISO-8601
+      in: query
+      name: start_date
+      description: >-
+        Only list messages received at or after this date time formatted as
+        [ISO-8601](https://en.wikipedia.org/wiki/ISO_8601)
+
+
+        Default:
+
+        Now-24
+    - schema:
+        type: string
+        format: ISO-8601
+        example: '2016-10-02T09:34:18.542Z'
+      in: query
+      name: end_date
+      description: >-
+        Only list messages received before this date time formatted as
+        [ISO-8601](https://en.wikipedia.org/wiki/ISO_8601)
+  responses:
+    '200':
+      description: OK
+      headers: {}
+      content:
+        application/json:
+          schema:
+            $ref: ..\components\schemas\inboundResponseObject.yaml

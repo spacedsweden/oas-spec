@@ -1,0 +1,31 @@
+type: object
+properties:
+  id:
+    type: string
+    description: The ID used to reference this group
+  name:
+    type: string
+    description: Name of group if set
+  size:
+    type: integer
+    description: The number of members currently in the group
+  created_at:
+    type: string
+    format: date-time
+    description: |-
+      Timestamp for when the group was created.
+
+      ISO-8601 format
+  modified_at:
+    type: string
+    format: date-time
+    description: |-
+      Timestamp for when the group was last modified.
+
+      ISO-8601 format
+example:
+  id: HjIgBSNd23F
+  name: Customers
+  size: 3000
+  created_at: '2016-10-06T09:35:18.542Z'
+  modified_at: '2016-10-08T09:34:18.542Z'

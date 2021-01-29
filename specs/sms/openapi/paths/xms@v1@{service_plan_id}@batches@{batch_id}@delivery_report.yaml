@@ -1,0 +1,62 @@
+parameters:
+  - $ref: ..\components\parameters\service_plan_id.yaml
+  - schema:
+      type: string
+      example: 0d0fj329dk3dr
+    name: batch_id
+    in: path
+    required: true
+    description: Id from from post to /batches
+get:
+  summary: Retrieve a delivery report
+  description: >-
+    Delivery reports can be retrieved even if no callback was requested. The
+    difference between a summary and a full report is only that the full report
+    contains the phone numbers in [E164
+    format](https://en.wikipedia.org/wiki/E.164) for each status code. Callback
+    information: https://developers.sinch.com/docs/sms-rest#callback
+  security:
+    - BearerAuth: []
+  tags:
+    - Delivery reports
+  operationId: GetDeliveryReportByBatchId
+  parameters:
+    - schema:
+        type: string
+        enum:
+          - summary
+          - full
+        default: summary
+      in: query
+      name: type
+      description: |-
+        The type of delivery report.
+        Constraints:
+        Must be summary or full
+
+        Default:
+        summary
+      required: true
+    - schema:
+        type: string
+        example: 'Queued, Dispatched, Delivered'
+      in: query
+      name: status
+      description: Comma separated list of delivery_report_statuses to include
+    - schema:
+        type: string
+        example: '400, 405'
+      in: query
+      name: code
+      description: "\tComma separated list of delivery_receipt_error_codes to include"
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: ..\components\schemas\retrieveDeliveryResponseObj.yaml
+    '400':
+      description: >-
+        Not found. The batch ID is not known to the system or the delivery
+        report type is not recognized.

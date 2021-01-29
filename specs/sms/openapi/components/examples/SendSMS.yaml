@@ -1,0 +1,5 @@
+value:
+  from: '12345'
+  to:
+    - '+15551231212'
+  body: Hello how are you

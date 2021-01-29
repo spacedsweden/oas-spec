@@ -1,0 +1,99 @@
+parameters:
+  - $ref: ..\components\parameters\service_plan_id.yaml
+get:
+  summary: List Groups
+  operationId: ListGroups
+  description: >-
+    With the list operation you can list all groups that you have created. This
+    operation supports pagination.
+
+
+    Groups are returned in reverse chronological order.
+  security:
+    - BearerAuth: []
+  tags:
+    - Groups
+  parameters:
+    - schema:
+        type: integer
+        minimum: 0
+        default: 0
+      in: query
+      name: page
+      description: |-
+        The page number starting from 0
+
+        Constraints:
+        0 or larger
+
+        Default:
+        0
+      example: 50
+    - schema:
+        type: integer
+        maximum: 100
+        minimum: 0
+        default: 30
+      in: query
+      name: page_size
+      description: |-
+        Determines the size of a page
+
+        Constraints:
+        Max 100
+
+        Default:
+        30
+      example: 50
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              page:
+                type: integer
+              page_size:
+                type: integer
+              count:
+                type: integer
+              groups:
+                type: array
+                items:
+                  $ref: ..\components\schemas\groupObject.yaml
+post:
+  summary: Create group
+  operationId: CreateGroup
+  description: >-
+    A group is a set of MSISDNs that can be used as a target in the
+    send_batch_msg operation. An MSISDN can only occur once in a group and any
+    attempts to add a duplicate would be ignored but not rejected.
+  security:
+    - BearerAuth: []
+  tags:
+    - Groups
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ..\components\schemas\groupObject.yaml
+  responses:
+    '201':
+      description: Created
+      content:
+        application/json:
+          schema:
+            $ref: ..\components\schemas\createGroupResponse.yaml
+    '400':
+      description: >-
+        Bad request. There was an error with your request. The body is a JSON
+        object described in rest_http_errors. Possible error codes include
+        syntax_invalid_json, syntax_invalid_parameter_format and
+        syntax_constraint_violation.
+    '403':
+      description: >-
+        Forbidden. The system was not able to fulfill your request. The body is
+        a JSON object described in rest_http_errors. Possible error codes
+        include conflict_group_name.

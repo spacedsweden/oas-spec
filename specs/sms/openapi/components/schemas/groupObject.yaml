@@ -1,0 +1,104 @@
+type: object
+properties:
+  name:
+    type: string
+    maxLength: 20
+    description: Name of the group
+  members:
+    type: array
+    maxItems: 10000
+    items:
+      $ref: .\msisdn.yaml
+    description: >-
+      Initial list of phone numbers in [E164
+      format](https://en.wikipedia.org/wiki/E.164)
+      [MSISDNs](https://developers.sinch.com/docs/sms-rest#msisdn) for the
+      group.
+  child_groups:
+    type: array
+    description: >-
+      MSISDNs of child group will be included in this group. If present then
+      this group will be auto populated.
+
+
+      Constraints:
+
+      Elements must be group IDs.
+    maxItems: 10
+    items:
+      type: string
+      description: Group ID
+  auto_update:
+    type: object
+    properties:
+      to:
+        type: string
+        description: |-
+          Short code or long number addressed in MO.
+
+          Constraints:
+          Must be valid MSISDN or short code.
+      add:
+        type: object
+        properties:
+          first_word:
+            type: string
+            pattern: ^\w+$
+            description: >-
+              Keyword to be sent in MO to add MSISDN to a group Opt-in keyword
+              like "JOIN" If auto_update.to is dedicated long/short number or
+              unique brand keyword like "Sinch" if it is a shared short code.
+
+
+              Constraints:
+
+
+              Max length: 15 characters
+
+              Must be one word.
+            maxLength: 15
+          second_word:
+            type: string
+            pattern: ^\w+$
+            description: |-
+              Opt-in keyword like "JOIN" if auto_update.to is shared short code.
+
+              Constraints:
+
+              Max length: 15 characters
+              Must be one word.
+            maxLength: 15
+      remove:
+        type: object
+        description: Keyword to be sent in MO to remove from a group.
+        properties:
+          first_word:
+            type: string
+            pattern: ^\w+$
+            description: >-
+              Opt-out keyword like "LEAVE" If auto_update.to is dedicated
+              long/short number or unique brand keyword like "Sinch" if it is a
+              shared short code.
+
+
+              Constraints:
+
+
+              Max length: 15 characters
+
+              Must be one word.
+            maxLength: 15
+          second_word:
+            type: string
+            pattern: ^\w+$
+            description: >-
+              Opt-out keyword like "LEAVE" if auto_update.to is shared short
+              code.
+
+
+              Constraints:
+
+              Max length: 15 characters
+
+              Must be one word.
+            maxLength: 15

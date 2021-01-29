@@ -1,0 +1,117 @@
+parameters:
+  - $ref: ..\components\parameters\service_plan_id.yaml
+  - $ref: ..\components\parameters\batch_id.yaml
+get:
+  summary: Get a batch message
+  operationId: GetBatchMessage
+  description: This operation get a specific batch with the provided batch ID.
+  tags:
+    - Batches
+  security:
+    - BearerAuth: []
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: ..\components\schemas\sendBatchCreated.yaml
+          examples:
+            response:
+              value:
+                id: 9dfn32n423kljklj234
+                from: '12345'
+                to:
+                  - '+15551231212'
+                body: Hello how are you
+                created_at: '2020-02-25T23:01:01Z'
+                modified_at: '2020-02-25T23:01:01Z'
+                canceled: false
+    '404':
+      description: Not found. The batch ID is unknown to the system.
+post:
+  summary: Update a Batch message
+  operationId: UpdateBatchMessage
+  description: >-
+    This operation will update all provided parameters of a batch for the given
+    batch ID.
+  tags:
+    - Batches
+  security:
+    - BearerAuth: []
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ..\components\schemas\updateBatchReq.yaml
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: ..\components\schemas\sendBatchCreated.yaml
+    '400':
+      description: >-
+        Bad request.There was an error with your request. The body is a JSON
+        object described in rest_http_errors. Possible error codes include
+        `syntax_invalid_json`, `syntax_invalid_parameter_format` and
+        `syntax_constraint_violation.`
+    '403':
+      description: >-
+        The system was not able to fulfill your request. The body is a JSON
+        object described in rest_http_errors. Possible error codes include
+        `batch_already_dispatched`.
+put:
+  summary: Replace a batch
+  operationId: ReplaceBatch
+  description: >-
+    This operation will replace all the parameters of a batch with the provided
+    values. Effectively the same as cancelling a batch and sending a new one
+    instead.
+  tags:
+    - Batches
+  security:
+    - BearerAuth: []
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ..\components\schemas\sendBatchObject.yaml
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: ..\components\schemas\sendBatchCreated.yaml
+    '400':
+      description: >-
+        Bad request. There was an error with your request. The body is a JSON
+        object described in rest_http_errors. Possible error codes include
+        `syntax_invalid_json`, `syntax_invalid_parameter_format` and
+        `syntax_constraint_violation.`
+delete:
+  summary: Cancel a batch message
+  operationId: CancelBatchMessage
+  description: >-
+    A batch can be canceled at any point. If a batch is canceled while it's
+    currently being delivered some messages currently being processed might
+    still be delivered. The delivery report will indicate which messages were
+    canceled and which weren't.
+
+
+    Canceling a batch scheduled in the future will result in an empty delivery
+    report while canceling an already sent batch would result in no change to
+    the completed delivery report.
+  tags:
+    - Batches
+  security:
+    - BearerAuth: []
+  responses:
+    '200':
+      description: Batch deleted
+      content:
+        application/json:
+          schema:
+            $ref: ..\components\schemas\sendBatchObject.yaml

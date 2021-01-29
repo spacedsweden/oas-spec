@@ -1,0 +1,93 @@
+type: object
+properties:
+  toAdd:
+    type: array
+    description: |-
+      List of phone numbers and group IDs to add to the batch.
+
+      Constraints:
+      1 to 100 elements.
+    items:
+      type: string
+    minItems: 1
+    maxItems: 100
+    example:
+      - '+44531234233'
+      - '34234445434'
+  toRemove:
+    description: "List of phone numbers and group IDs to remove from the batch.\t\n\nconstraints:\n1 to 100 elements."
+    type: array
+    items:
+      type: string
+    example:
+      - '+4453868734'
+      - '3423423432'
+  from:
+    type: string
+    description: |-
+      Sender number.
+
+      Default:
+      Must be valid phone number, short code or alphanumeric.
+    example: '+46342324894'
+  body:
+    type: string
+    maxLength: 1600
+    description: >-
+      The message content. Normal text string for mt_text and Base64 encoded for
+      mt_binary.
+
+
+      Constraints:
+
+      Max 1600 chars for mt_text and max 140 bytes together with udh for
+      mt_binary
+    example: A text message!
+  delivery_report:
+    type: string
+    enum:
+      - none
+      - summary
+      - full
+      - per_recipient
+    description: >-
+      Request delivery report callback. Note that delivery reports can be
+      fetched from the API regardless of this setting.
+
+
+      Constraints:
+
+      Valid types are none, summary, full and per_recipient
+  send_at:
+    type: string
+    format: date-time
+    description: >-
+      f set in the future the message will be delayed until send_at occurs.
+      ISO-8601 format.
+
+
+      Constraints:
+
+      Must be before expire_at. If set in the past messages will be sent
+      immediately.
+  expire_at:
+    type: string
+    format: date-time
+    default: 3 days after send_at
+    description: |-
+      If set the system will stop trying to deliver the message at this point.
+
+      Constraints:
+      Must be after send_at
+
+      Default:
+      3 days after send_at
+  callback_url:
+    type: string
+    maxLength: 2048
+    description: |-
+      Override the default callback URL for this batch.
+
+      Constraints:
+      Must be valid URL. Max 2048 characters long.
+    example: example.callback.com

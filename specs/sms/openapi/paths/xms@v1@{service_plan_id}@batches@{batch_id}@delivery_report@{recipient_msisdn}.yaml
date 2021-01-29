@@ -1,0 +1,92 @@
+parameters:
+  - $ref: ..\components\parameters\service_plan_id.yaml
+  - schema:
+      type: string
+      example: OyHjk0e04d4E35
+    name: batch_id
+    in: path
+    required: true
+    description: Id from from post to /batches
+  - schema:
+      type: string
+      example: '+134848393506'
+    name: recipient_msisdn
+    in: path
+    required: true
+    description: Phone number you want to search for
+get:
+  summary: Retrieve a recipient delivery report
+  security:
+    - BearerAuth: []
+  tags:
+    - Delivery reports
+  operationId: GetDeliveryReportByPhoneNumber
+  description: >-
+    A recipient delivery report contains the message status for a single
+    recipient phone number.
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              type:
+                type: string
+                default: _recipient_delivery_report_sms
+                description: The object type. Will always be _recipient_delivery_report_sms
+                example: _recipient_delivery_report_sms
+              batch_id:
+                type: string
+                description: "\tThe ID of the batch this delivery report belongs to"
+                example: OyHj5kd95jed4E35
+              recipient:
+                type: string
+                description: The recipient phone number
+                example: '+44231235674'
+              code:
+                type: integer
+                description: "\tThe detailed status code. See Error Codes"
+                example: 400
+              status:
+                type: string
+                description: The simplified status as described in Delivery Report Statuses
+                example: Bad request
+              status_message:
+                type: string
+                description: 'A description of the status, if available.'
+                example: >-
+                  Message is queued within REST API system and will be
+                  dispatched according to the rate of the account.
+              at:
+                type: string
+                format: date-time
+                description: >-
+                  A timestamp of when the Delivery Report was created in the
+                  Sinch service.
+
+
+                  ISO-8601 format
+              operator_status_at:
+                type: string
+                format: date-time
+                description: "A timestamp extracted from the Delivery Receipt from the originating SMSC.\n\t\nISO-8601 format"
+              client_reference:
+                type: string
+                description: "\tThe client identifier of the batch this delivery report belongs to, if set when submitting batch."
+              applied_originator:
+                type: string
+                description: >-
+                  The default originator used for the recipient this delivery
+                  report belongs to, if default originator pool configured and
+                  no originator set when submitting batch.
+              number_of_message_parts:
+                type: integer
+                description: >-
+                  The number of parts the message was split into. Present only
+                  if max_number_of_message_parts parameter was set.
+    '404':
+      description: >-
+        Not found. The batch ID is not known to the system or the recipient is
+        not a target of this batch.

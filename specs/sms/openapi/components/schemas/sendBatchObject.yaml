@@ -1,0 +1,156 @@
+type: object
+properties:
+  to:
+    type: array
+    minItems: 1
+    maxItems: 1000
+    items:
+      $ref: .\msisdn.yaml
+    description: >-
+      List of Phone numbers and group IDs that will receive the batch.
+
+      Constraints: 1 to 1000 elements [More
+      info](https://developers.sinch.com/docs/sms-rest#msisdn)
+    example:
+      - '+15551231234'
+      - '+15551256344'
+    default:
+      - '+15551231234'
+      - '+15551256344'
+  from:
+    type: string
+    description: |
+      Sender number.
+
+      Required if Automatic Default Originator not configured.
+    example: '+15551231234'
+  type:
+    type: string
+    default: mt_text
+    enum:
+      - mt_text
+      - mt_binary
+    description: |-
+      Identifies the type of batch message.
+      Default:
+      mt_text
+    example: mt_text
+  body:
+    type: string
+    description: >-
+      The message content. Normal text string for mt_text and Base64 encoded for
+      mt_binary.
+
+
+      Max 1600 chars for mt_text and max 140 bytes together with udh for
+      mt_binary.
+    example: This is a message to be sent!
+  udh:
+    type: string
+    description: |-
+      The UDH header of a binary message. Max 140 bytes together with body.
+
+      Required if type is mt_binary.
+  delivery_report:
+    type: string
+    enum:
+      - none
+      - summary
+      - full
+      - per_recipient
+    description: "Request delivery report callback. \n\nNote that delivery reports can be fetched from the API regardless of this setting. \n\nValid types are none, summary, full and per_recipient\t"
+  send_at:
+    type: string
+    format: date-time
+    description: "If set in the future the message will be delayed until send_at occurs.\n\nMust be before expire_at. \n \nIf set in the past messages will be sent immediately.\t"
+  expire_at:
+    type: string
+    format: date-time
+    default: 3 days after send_at
+    description: |-
+      If set the system will stop trying to deliver the message at this point.
+
+       Must be after send_at. 3 days after send_at.
+  callback_url:
+    type: string
+    format: uri
+    example: 'https://yourdomain.com/sms/deliveryreports'
+    maxLength: 2048
+    description: |-
+      Override the default callback URL for this batch.
+
+      Must be valid URL.
+
+      Max 2048 characters long.
+  flash_message:
+    type: boolean
+    default: false
+    description: >-
+      Shows message on screen without user interaction while not saving the
+      message to the inbox.
+
+
+      true or false.
+  parameters:
+    type: object
+    description: >-
+      Contains the parameters that will be used for customizing the message for
+      each recipient.
+
+
+      Not applicable to if type is mt_binary
+
+      'example :  "parameters: [{"name": {
+          "123456789": "Joe",
+          "default": "there"}]'
+      [Click here to learn more about
+      parameters](https://developers.sinch.com/docs/sms-rest-parameterization)
+    properties:
+      '{parameter_key}':
+        type: object
+        maxLength: 16
+        pattern: '^[A-Za-z0-9_\-.]+$'
+        description: >-
+          The name of the parameter that will be replaced in the message body.
+
+
+          Letters A-Z and a-z, digits 0-9 and .-_ allowed. Max 16 characters
+          long.
+        properties:
+          '{msisdn}':
+            type: string
+            maxLength: 160
+            example: '{"15551231212":"Joe"}'
+            description: |-
+              The recipient that should get this value
+              Max 160 characters long
+          default:
+            type: string
+            maxLength: 160
+            example: '{"default":"Customer"}'
+            description: |-
+              The fall back value for omitted recipient MSISDNs
+              Max 160 characters long.
+  client_reference:
+    type: string
+    maxLength: 128
+    description: >-
+      The client identifier of batch message. If set, it will be added in the
+      delivery report/callback of this batch
+
+
+      Max 128 characters long
+  max_number_of_message_parts:
+    type: integer
+    minimum: 1
+    description: >-
+      Message will be dispatched only if it is not split to more parts than Max
+      Number of Message Parts
+
+
+      Must be higher or equal 1
+required:
+  - to
+  - type
+  - body
+  - delivery_report

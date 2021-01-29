@@ -1,0 +1,54 @@
+type: object
+properties:
+  type:
+    type: string
+    default: delivery_report_sms
+    description: The object type. Will always be delivery_report_sms
+  batch_id:
+    type: string
+    description: The ID of the batch this delivery report belongs to
+  total_message_count:
+    type: string
+    description: The total number of messages for the batch
+  statuses:
+    type: array
+    description: >-
+      Array with status objects. Only status codes with at least one recipient
+      will be listed.
+    items:
+      type: object
+      properties:
+        code:
+          description: The detailed status code. See Error Codes
+          type: integer
+        status:
+          type: string
+          description: The simplified status as described in Delivery Report Statuses
+        count:
+          description: >-
+            The number of messages that currently has this code. Will always be
+            at least 1
+          type: integer
+        recipients:
+          type: array
+          description: >-
+            Only for full report. A list of the phone number recipients which
+            messages has this status code.
+          items:
+            type: string
+  client_reference:
+    type: string
+    description: >-
+      The client identifier of the batch this delivery report belongs to, if set
+      when submitting batch.
+example:
+  type: delivery_report_sms
+  batch_id: jkJ4da60UK6skNHG432
+  total_message_count: '20000'
+  statuses:
+    - code: 200
+      status: ok
+      count: 20 000
+    - code: 400
+      status: bad request
+      count: 1

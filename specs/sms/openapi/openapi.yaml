@@ -1,0 +1,60 @@
+openapi: 3.0.0
+info:
+  title: SMS
+  version: 1.0.1
+  contact:
+    name: Support
+    url: www.sinch.com
+    email: Support@sinch.com
+  license:
+    name: MIT
+    url: 'https://www.sinch.com/toc'
+  description: >-
+    The most feature rich API that Sinch offers is the SMS REST API. Single
+    messages, scheduled batch send-outs, using message templates and more.
+servers:
+  - url: 'https://us.sms.api.sinch.com'
+    description: General api
+x-explorer-enabled: false
+x-samples-enabled: true
+x-samples-languages:
+  - curl
+  - java
+  - csharp
+  - node
+x-headers:
+  - key: Authorization
+    value: 'Bearer {token}'
+paths:
+  '/xms/v1/{service_plan_id}/batches':
+    $ref: 'paths\xms@v1@{service_plan_id}@batches.yaml'
+  '/xms/v1/{service_plan_id}/inbounds':
+    $ref: 'paths\xms@v1@{service_plan_id}@inbounds.yaml'
+  '/xms/v1/{service_plan_id}/inbounds/{inbound_id}':
+    $ref: 'paths\xms@v1@{service_plan_id}@inbounds@{inbound_id}.yaml'
+  '/xms/v1/{service_plan_id}/batches/dry_run':
+    $ref: 'paths\xms@v1@{service_plan_id}@batches@dry_run.yaml'
+  '/xms/v1/{service_plan_id}/batches/{batch_id}':
+    $ref: 'paths\xms@v1@{service_plan_id}@batches@{batch_id}.yaml'
+  '/xms/v1/{service_plan_id}/batches/{batch_id}/delivery_report':
+    $ref: 'paths\xms@v1@{service_plan_id}@batches@{batch_id}@delivery_report.yaml'
+  '/xms/v1/{service_plan_id}/batches/{batch_id}/delivery_report/{recipient_msisdn}':
+    $ref: >-
+      paths\xms@v1@{service_plan_id}@batches@{batch_id}@delivery_report@{recipient_msisdn}.yaml
+  '/xms/v1/{service_plan_id}/groups':
+    $ref: 'paths\xms@v1@{service_plan_id}@groups.yaml'
+  '/xms/v1/{service_plan_id}/groups/{group_id}':
+    $ref: 'paths\xms@v1@{service_plan_id}@groups@{group_id}.yaml'
+  '/xms/v1/{service_plan_id}/groups/{group_id}/members':
+    $ref: 'paths\xms@v1@{service_plan_id}@groups@{group_id}@members.yaml'
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      description: Sinch security scheme
+tags:
+  - name: Sending SMS
+    description: Detailed information about SMS and content that you can send in SMS
+    externalDocs:
+      url: 'http://developers.sinch.com.com/docs/sms/sms-rest'
